@@ -1,3 +1,5 @@
+package test;
+
 public class Point {
     public final float x,y;
     public Point(float x, float y) {

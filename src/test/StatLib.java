@@ -1,3 +1,6 @@
+package test;
+
+import test.Line;
 
 public class StatLib {
 
@@ -52,12 +55,12 @@ public class StatLib {
     }
 
     // returns the deviation between point p and the line equation of the points
-    public static float dev(Point p,Point[] points){
+    public static float dev(Point p, Point[] points){
         return 0;
     }
 
     // returns the deviation between point p and the line
-    public static float dev(Point p,Line l){
+    public static float dev(Point p, Line l){
         return 0;
     }
 

@@ -1,3 +1,4 @@
+package test;
 
 import java.awt.*;
 
@@ -12,14 +13,14 @@ public class MainTrain {
         float x[]={1,2,3,4,5,6,7,8,9,10};
         float y[]={2.1f,4.2f,6.1f,8.1f,10.3f,12.2f,14.4f,16.1f,18.2f,20.3f};
 //
-//        Point ps[]=new Point[N];
+//        test.Point ps[]=new test.Point[N];
 //        for(int i=0;i<N;i++)
-//            ps[i]=new Point(x[i],y[i]);
+//            ps[i]=new test.Point(x[i],y[i]);
 //
-//        Line l=StatLib.linear_reg(ps);
-//        Point p=new Point(4,8);
+//        test.Line l=test.StatLib.linear_reg(ps);
+//        test.Point p=new test.Point(4,8);
 //
-//        float v[]={StatLib.var(x),StatLib.cov(x,y),StatLib.pearson(x,y),l.a,l.b,l.f(4),StatLib.dev(p,l)};
+//        float v[]={test.StatLib.var(x),test.StatLib.cov(x,y),test.StatLib.pearson(x,y),l.a,l.b,l.f(4),test.StatLib.dev(p,l)};
 //        float e[]={8.25f,16.63f,0.999f,2.015f,0.113f,8.176f,0.176f};
 //
 //
