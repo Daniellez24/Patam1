@@ -20,16 +20,16 @@ public class MainTrain {
         test.Line l=test.StatLib.linear_reg(ps);
         test.Point p=new test.Point(4,8);
 
-//        float v[]={test.StatLib.var(x),test.StatLib.cov(x,y),test.StatLib.pearson(x,y),l.a,l.b,l.f(4),test.StatLib.dev(p,l)};
-//        float e[]={8.25f,16.63f,0.999f,2.015f,0.113f,8.176f,0.176f};
-//
-//
-//        for(int i=0;i<7;i++)
-//            if(wrong(v[i],e[i]))
-//                System.out.println("error for check "+i+" (-14)");
-//
+        float v[]={test.StatLib.var(x),test.StatLib.cov(x,y),test.StatLib.pearson(x,y),l.a,l.b,l.f(4),test.StatLib.dev(p,l)};
+        float e[]={8.25f,16.63f,0.999f,2.015f,0.113f,8.176f,0.176f};
 
-//        System.out.println("done");
+
+        for(int i=0;i<7;i++)
+            if(wrong(v[i],e[i]))
+                System.out.println("error for check "+i+" (-14)");
+
+
+        System.out.println("done");
 //
 //        System.out.println(StatLib.avg(x)); // 5.5
 //
