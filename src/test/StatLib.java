@@ -33,7 +33,7 @@ public class StatLib {
     public static float cov(float[] x, float[] y) {
         int N = x.length;
         float sum = 0;
-        for (int i = 0; i < N; i++) // do we know for sure that size of x equals size of y? add test?
+        for (int i = 0; i < N; i++) 
             sum = sum + ((x[i] - avg(x)) * (y[i] - avg(y)));
         float cov = sum / N;
         return cov;

@@ -29,7 +29,7 @@ public class MainTrain {
                 System.out.println("error for check "+i+" (-14)");
 
 
-        System.out.println("done");
+         System.out.println("done");
 //
 //        System.out.println(StatLib.avg(x)); // 5.5
 //
