@@ -1,5 +1,7 @@
 package test;
 
+import java.util.List;
+
 public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 	
 
