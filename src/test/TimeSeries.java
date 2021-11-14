@@ -9,6 +9,7 @@ import java.util.Arrays;
 public class TimeSeries {
 
 	String fileName;
+	String[][] dataMatrix;
 
 
 	public TimeSeries(String csvFileName) {
@@ -16,7 +17,6 @@ public class TimeSeries {
 	}
 
 	public void readCsvFile() throws Exception {
-		String[][] dataMatrix = new String[200][];
 		int numOfColumns = 0;
 		int counter = 1; // represents the lines in the matrix dataNames
 		String[] data;
@@ -55,5 +55,5 @@ public class TimeSeries {
 		}
 		return counter;
 	}
-	
+
 }
