@@ -9,8 +9,8 @@ import java.util.Arrays;
 public class TimeSeries {
 
 	String fileName;
-	String[][] dataMatrix;
-
+	Float[][] dataMatrix;
+	String[] criteriaTitles;
 
 	public TimeSeries(String csvFileName) {
 		fileName = csvFileName;
@@ -18,7 +18,7 @@ public class TimeSeries {
 
 	public void readCsvFile() throws Exception {
 		int numOfColumns = 0;
-		int counter = 1; // represents the lines in the matrix dataNames
+		int counter = 0; // represents the lines in the matrix dataMatrix
 		String[] data;
 		String delimiter = ",";
 		BufferedReader buf = new BufferedReader(new FileReader((this.fileName)));
@@ -29,20 +29,22 @@ public class TimeSeries {
 		if (line!= null){
 			data = line.split(delimiter);
 			numOfColumns = data.length;
-			dataMatrix = new String[numOfLines][numOfColumns];
+			dataMatrix = new Float[numOfLines][numOfColumns];
+			criteriaTitles = new String[numOfColumns];
 			for (int i = 0; i < numOfColumns; i++) {
-				dataMatrix[0][i] = data[i];
+				criteriaTitles[i] = data[i];
+//				dataMatrix[0][i] = Float.parseFloat(data[i]);
 			}
 		}
 
 		while((line = buf.readLine()) != null){
 			data = line.split(delimiter);
 			for (int i=0; i<numOfColumns; i++){
-				dataMatrix[counter][i] = data[i];
+				dataMatrix[counter][i] = Float.parseFloat(data[i]);
 			}
 			counter++;
 		}
-		System.out.println(Arrays.toString(dataMatrix));
+//		System.out.println(Arrays.toString(dataMatrix));
 
 		buf.close();
 	}
@@ -53,7 +55,7 @@ public class TimeSeries {
 		while((buf.readLine()) != null){
 			counter++;
 		}
-		return counter;
+		return counter-1; // remove the titles line in the file
 	}
 
 }

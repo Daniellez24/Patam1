@@ -1,3 +1,4 @@
 
 *.xml
 trainFile1.csv
+*.class
