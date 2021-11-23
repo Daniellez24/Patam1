@@ -11,6 +11,8 @@ public class TimeSeries {
 	private String fileName;
 	private float[][] dataMatrix;
 	private String[] criteriaTitles;
+	private int numOfLines;
+	public float treshold = (float) 0.9;
 
 	public TimeSeries(String csvFileName) {
 		fileName = csvFileName;
@@ -23,7 +25,7 @@ public class TimeSeries {
 		String delimiter = ",";
 		BufferedReader buf = new BufferedReader(new FileReader((this.fileName)));
 		String line;
-		int numOfLines = getNumOfLines(fileName);
+		numOfLines = getNumOfLines(fileName);
 
 		line = buf.readLine();
 		if (line!= null){
@@ -59,6 +61,19 @@ public class TimeSeries {
 
 	public float[][] getDataMatrix(){
 		return dataMatrix;
+	}
+
+	public String getCriteriaTitle(int index){ // get a name of a feature (criteria)
+		return criteriaTitles[index];
+	}
+
+	public float[] getColumn(int c){ // c = which column number I'd like to get
+		float[] column = new float[numOfLines];
+		for (int i = 0; i<numOfLines; i++){
+			column[i] = dataMatrix[i][c];
+		}
+
+		return column;
 	}
 
 }
