@@ -25,14 +25,23 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 					c=j;
 				}
 			}
-			if(c != (-1) && (m*1.1) > ts.treshold){ // Fi and Fj are correlated features
+			if(c != (-1) && m > ts.treshold){ // Fi and Fj are correlated features
 				System.out.println("Correlated Features: i " + i + " c " + c);
+				Point[] points = getPointsArray(ts.getColumn(i), ts.getColumn(c));
+				Line l = StatLib.linear_reg(points);
+				float maxDev = 0;
+				for(int d = 0; d < points.length; d++){ // get the maxDev of the correlated features
+					float tempDev = StatLib.dev(points[d], l);
+					if (tempDev > maxDev)
+						maxDev = tempDev;
+				}
+				// set the 2 features as correlated,  and add to the correlated features list
 				CorrelatedFeatures cr = new CorrelatedFeatures(
 						ts.getCriteriaTitle(i),
 						ts.getCriteriaTitle(c),
 						m,
-						StatLib.linear_reg(getPointsArray(ts.getColumn(i), ts.getColumn(c))),
-						ts.treshold);
+						l,
+						(float) (maxDev*1.1)); // *1.1 to avoid elimination of border points
 				correlatedFeatureslist.add(cr);
 			}
 		}
@@ -51,10 +60,12 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 	@Override
 	public List<AnomalyReport> detect(TimeSeries ts) {
+
 		return null;
 	}
 	
 	public List<CorrelatedFeatures> getNormalModel(){
-		return null;
+
+		return correlatedFeatureslist;
 	}
 }

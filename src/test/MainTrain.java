@@ -44,23 +44,23 @@ public class MainTrain {
 		}catch(IOException e) {}
 	}
 
-//	static void checkCorrelationTrain(CorrelatedFeatures c,String f1, String f2, float a, float b){
-//		if(c.feature1.equals(f1)){
-//			if(!c.feature2.equals(f2))
-//				System.out.println("wrong correlated feature of "+f1+" (-20)");
-//			else{
-//				if(c.corrlation<0.99)
-//					System.out.println(f1+"-"+f2+" wrong correlation detected (-5)");
-//				if(c.lin_reg.a<a-0.5f || c.lin_reg.a>a+0.5f)
-//					System.out.println(f1+"-"+f2+" wrong value of line_reg.a (-5)");
-//				if(c.lin_reg.b<b-0.5f || c.lin_reg.b>b+0.5f)
-//					System.out.println(f1+"-"+f2+" wrong value of line_reg.b (-5)");
-//				if(c.threshold>0.3)
-//					System.out.println(f1+"-"+f2+" wrong threshold detected (-5)");
-//			}
-//		}
-//
-//	}
+	static void checkCorrelationTrain(CorrelatedFeatures c,String f1, String f2, float a, float b){
+		if(c.feature1.equals(f1)){
+			if(!c.feature2.equals(f2))
+				System.out.println("wrong correlated feature of "+f1+" (-20)");
+			else{
+				if(c.corrlation<0.99)
+					System.out.println(f1+"-"+f2+" wrong correlation detected (-5)");
+				if(c.lin_reg.a<a-0.5f || c.lin_reg.a>a+0.5f)
+					System.out.println(f1+"-"+f2+" wrong value of line_reg.a (-5)");
+				if(c.lin_reg.b<b-0.5f || c.lin_reg.b>b+0.5f)
+					System.out.println(f1+"-"+f2+" wrong value of line_reg.b (-5)");
+				if(c.threshold>0.3)
+					System.out.println(f1+"-"+f2+" wrong threshold detected (-5)");
+			}
+		}
+
+	}
 
 
 	public static void main(String[] args) {
@@ -82,15 +82,15 @@ public class MainTrain {
 		}
 		SimpleAnomalyDetector ad=new SimpleAnomalyDetector();
 		ad.learnNormal(ts);
-//		List<CorrelatedFeatures> cf=ad.getNormalModel();
+		List<CorrelatedFeatures> cf=ad.getNormalModel();
 
-//		if(cf.size()!=2)
-//			System.out.println("wrong size of correlated features (-40)");
-//		else
-//			for(CorrelatedFeatures c : cf) {
-//				checkCorrelationTrain(c,"A","C",a1,b1); // 20 points
-//				checkCorrelationTrain(c,"B","D",a2,b2); // 20 points
-//			}
+		if(cf.size()!=2)
+			System.out.println("wrong size of correlated features (-40)");
+		else
+			for(CorrelatedFeatures c : cf) {
+				checkCorrelationTrain(c,"A","C",a1,b1); // 20 points
+				checkCorrelationTrain(c,"B","D",a2,b2); // 20 points
+			}
 //
 //		// test the anomaly detector: (60 points)
 //		// one simply anomaly is injected to the data
