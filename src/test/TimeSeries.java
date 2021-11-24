@@ -10,9 +10,9 @@ public class TimeSeries {
 
 	private String fileName;
 	private float[][] dataMatrix;
-	private String[] criteriaTitles;
+	public String[] criteriaTitles;
 	private int numOfLines;
-	public float treshold = (float) 0.9;
+	public float threshold = (float) 0.9;
 
 	public TimeSeries(String csvFileName) {
 		fileName = csvFileName;
@@ -25,7 +25,7 @@ public class TimeSeries {
 		String delimiter = ",";
 		BufferedReader buf = new BufferedReader(new FileReader((this.fileName)));
 		String line;
-		numOfLines = getNumOfLines(fileName);
+		numOfLines = getNumOfLines();
 
 		line = buf.readLine();
 		if (line!= null){
@@ -50,13 +50,17 @@ public class TimeSeries {
 		buf.close();
 	}
 
-	public int getNumOfLines (String fileName) throws Exception{
+	public int getNumOfLines () throws Exception{
 		BufferedReader buf = new BufferedReader(new FileReader((this.fileName)));
 		int counter = 0; // the function will return one line more than reality
 		while((buf.readLine()) != null){
 			counter++;
 		}
 		return counter-1; // remove the titles line in the file
+	}
+
+	public int getNumOFlinesParameter (){
+		return numOfLines;
 	}
 
 	public float[][] getDataMatrix(){

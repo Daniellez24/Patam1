@@ -91,30 +91,30 @@ public class MainTrain {
 				checkCorrelationTrain(c,"A","C",a1,b1); // 20 points
 				checkCorrelationTrain(c,"B","D",a2,b2); // 20 points
 			}
-//
-//		// test the anomaly detector: (60 points)
-//		// one simply anomaly is injected to the data
-//		int anomaly=5+r.nextInt(90); // one anomaly injected in a random time step
-//		generateTestCSV(a1,b1,a2,b2,anomaly);
-//		TimeSeries ts2=new TimeSeries("testFile1.csv");
-//		List<AnomalyReport> reports = ad.detect(ts2);
-//
-//		boolean anomlyDetected=false;
-//		int falseAlarms=0;
-//		for(AnomalyReport ar : reports) {
-//			if(ar.description.equals("A-C") && ar.timeStep == anomaly)
-//				anomlyDetected=true;
-//			else
-//				falseAlarms++;
-//		};
-//
-//		if(!anomlyDetected)
-//			System.out.println("the anomaly was not detected (-30)");
-//
-//		if(falseAlarms>0)
-//			System.out.println("you have "+falseAlarms+" false alarms (-"+Math.min(30,falseAlarms*3)+")");
-//
-//
+
+		// test the anomaly detector: (60 points)
+		// one simply anomaly is injected to the data
+		int anomaly=5+r.nextInt(90); // one anomaly injected in a random time step
+		generateTestCSV(a1,b1,a2,b2,anomaly);
+		TimeSeries ts2=new TimeSeries("testFile1.csv");
+		List<AnomalyReport> reports = ad.detect(ts2);
+
+		boolean anomlyDetected=false;
+		int falseAlarms=0;
+		for(AnomalyReport ar : reports) {
+			if(ar.description.equals("A-C") && ar.timeStep == anomaly)
+				anomlyDetected=true;
+			else
+				falseAlarms++;
+		};
+
+		if(!anomlyDetected)
+			System.out.println("the anomaly was not detected (-30)");
+
+		if(falseAlarms>0)
+			System.out.println("you have "+falseAlarms+" false alarms (-"+Math.min(30,falseAlarms*3)+")");
+
+
 		System.out.println("done");
 	}
 

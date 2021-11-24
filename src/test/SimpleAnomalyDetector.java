@@ -25,12 +25,12 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 					c=j;
 				}
 			}
-			if(c != (-1) && m > ts.treshold){ // Fi and Fj are correlated features
+			if(c != (-1) && m > ts.threshold){ // Fi and Fj are correlated features
 				System.out.println("Correlated Features: i " + i + " c " + c);
 				Point[] points = getPointsArray(ts.getColumn(i), ts.getColumn(c));
 				Line l = StatLib.linear_reg(points);
 				float maxDev = 0;
-				for(int d = 0; d < points.length; d++){ // get the maxDev of the correlated features
+				for(int d = 0; d < points.length; d++){ // get the maxDev of the correlated features, by testing each point of the points array
 					float tempDev = StatLib.dev(points[d], l);
 					if (tempDev > maxDev)
 						maxDev = tempDev;
@@ -60,8 +60,44 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 	@Override
 	public List<AnomalyReport> detect(TimeSeries ts) {
+		List<AnomalyReport> anomalyReport = new LinkedList<>();
+		float data[][] = ts.getDataMatrix();
 
-		return null;
+		try {
+			ts.readCsvFile();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		int feature1;
+		int feature2;
+		Point p;
+		float dev;
+		for (int line = 0; line < ts.getNumOFlinesParameter(); line++){
+			for (CorrelatedFeatures cr : correlatedFeatureslist) {
+				feature1 = getCriteriaNumOfColumn(cr.feature1, ts);
+				feature2 = getCriteriaNumOfColumn(cr.feature2, ts);
+				p = new Point(feature1, feature2);
+				dev = StatLib.dev(p, cr.lin_reg);
+				if(dev > cr.threshold){ // if dev is larger than the correlated features devMax = threshold, there is a deviation
+					System.out.println("Deviation detected! " + cr.feature1 + "-" + cr.feature2);
+					AnomalyReport report = new AnomalyReport(feature1 + "-" + feature2, line+1); // new report, line counting starts from 1
+					anomalyReport.add(report); // add report to anomalyReport list
+				}
+
+			}
+		}
+
+		return anomalyReport;
+	}
+
+	public int getCriteriaNumOfColumn(String feature, TimeSeries ts){ // turn feature String name into int
+		int featureNum = 0;
+		for (int i = 0; i < ts.criteriaTitles.length; i++){
+			if (i == (feature.charAt(0)-65))
+				return i;
+		}
+		return -1;
 	}
 	
 	public List<CorrelatedFeatures> getNormalModel(){
