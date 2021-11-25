@@ -9,24 +9,30 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 
 	@Override
 	public void learnNormal(TimeSeries ts) {
+
+		try {
+			ts.readCsvFile();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		float[][] data = ts.getDataMatrix();
 
 		int N = data.length; // num of columns
-		System.out.println(N);
 
 		for(int i = 0; i<N; i++){
 			float m = 0; // current pearson of 2 columns
 			int c = -1; // current potential correlated column to column i
 			float p; // pearson
 			for(int j = i+1; j<data[0].length; j++){ // data[0].length = length of a line (num of criteria/columns)
-				System.out.println("i " + i + " j " + j);
+//				System.out.println("i " + i + " j " + j);
 				if ((p=Math.abs(StatLib.pearson(ts.getColumn(i),ts.getColumn(j)))) > m){ // compare column i and j
 					m=p;
 					c=j;
 				}
 			}
 			if(c != (-1) && m > ts.threshold){ // Fi and Fj are correlated features
-				System.out.println("Correlated Features: i " + i + " c " + c);
+//				System.out.println("Correlated Features: i " + i + " c " + c);
 				Point[] points = getPointsArray(ts.getColumn(i), ts.getColumn(c));
 				Line l = StatLib.linear_reg(points);
 				float maxDev = 0;
@@ -61,7 +67,6 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 	@Override
 	public List<AnomalyReport> detect(TimeSeries ts) {
 		List<AnomalyReport> anomalyReport = new LinkedList<>();
-		float data[][] = ts.getDataMatrix();
 
 		try {
 			ts.readCsvFile();
@@ -69,19 +74,22 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 			e.printStackTrace();
 		}
 
+		float data[][] = ts.getDataMatrix();
+
+
 		int feature1;
 		int feature2;
 		Point p;
 		float dev;
-		for (int line = 0; line < ts.getNumOFlinesParameter(); line++){
+		for (int line = 0; line < ts.getNumOFlinesParameter(); line++){ // test in each line of ts, the two correlated features
 			for (CorrelatedFeatures cr : correlatedFeatureslist) {
 				feature1 = getCriteriaNumOfColumn(cr.feature1, ts);
 				feature2 = getCriteriaNumOfColumn(cr.feature2, ts);
-				p = new Point(feature1, feature2);
+				p = new Point(data[line][feature1], data[line][feature2]);
 				dev = StatLib.dev(p, cr.lin_reg);
 				if(dev > cr.threshold){ // if dev is larger than the correlated features devMax = threshold, there is a deviation
-					System.out.println("Deviation detected! " + cr.feature1 + "-" + cr.feature2);
-					AnomalyReport report = new AnomalyReport(feature1 + "-" + feature2, line+1); // new report, line counting starts from 1
+//					System.out.println("Deviation detected! " + cr.feature1 + "-" + cr.feature2);
+					AnomalyReport report = new AnomalyReport(cr.feature1 + "-" + cr.feature2, line+1); // new report, line counting starts from 1
 					anomalyReport.add(report); // add report to anomalyReport list
 				}
 
