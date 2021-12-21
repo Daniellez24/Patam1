@@ -49,18 +49,90 @@ public class Commands {
 	}
 	
 	// Command class for example:
-	public class ExampleCommand extends Command{
+//	public class ExampleCommand extends Command{
+//
+//		public ExampleCommand() {
+//			super("this is an example of command");
+//		}
+//
+//		@Override
+//		public void execute() {
+//			dio.write(description);
+//		}
+//	}
 
-		public ExampleCommand() {
-			super("this is an example of command");
+	public class UploadCSVfile extends Command{
+
+		public UploadCSVfile() {
+			super("upload a time series csv file");
 		}
 
 		@Override
 		public void execute() {
 			dio.write(description);
-		}		
+		}
+	}
+
+	public class AlgorithmSettings extends Command{
+
+		public AlgorithmSettings() {
+			super("algorithm settings");
+		}
+
+		@Override
+		public void execute() {
+			dio.write(description);
+		}
+	}
+
+	public class DetectAnomalies extends Command{
+
+		public DetectAnomalies() {
+			super("detect anomalies");
+		}
+
+		@Override
+		public void execute() {
+			dio.write(description);
+		}
+	}
+
+	public class DisplayResults extends Command{
+
+		public DisplayResults() {
+			super("display results");
+		}
+
+		@Override
+		public void execute() {
+			dio.write(description);
+		}
+	}
+
+	public class UploadAnomaliesAnalyzeResults extends Command{
+
+		public UploadAnomaliesAnalyzeResults() {
+			super("upload anomalies and analyze results");
+		}
+
+		@Override
+		public void execute() {
+			dio.write(description);
+		}
+	}
+
+	public class Exit extends Command{
+
+		public Exit() {
+			super("exit");
+		}
+
+		@Override
+		public void execute() {
+			dio.write(description);
+		}
 	}
 	
-	// implement here all other commands
+
 	
 }
