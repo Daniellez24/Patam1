@@ -3,11 +3,15 @@ package test;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Commands {
-	
+
+	public TimeSeries TSanomalyTrain;
+	public TimeSeries TSanomalyTest;
+
 	// Default IO interface
 	public interface DefaultIO{
 		public String readText();
@@ -47,40 +51,23 @@ public class Commands {
 		
 		public abstract void execute();
 	}
-	
-	// Command class for example:
-//	public class ExampleCommand extends Command{
-//
-//		public ExampleCommand() {
-//			super("this is an example of command");
-//		}
-//
-//		@Override
-//		public void execute() {
-//			dio.write(description);
-//		}
-//	}
 
 
 
 	public class UploadCSVfile extends Command{
 
 		public UploadCSVfile() {
+
 			super("1. upload a time series csv file");
 		}
 
 		@Override
 		public void execute() {
 			dio.write("Please upload your local train CSV file.\n");
-			String str = "";
 			try{
 				FileWriter anomalyTrain = new FileWriter("anomalyTrain.csv");;
+				generateAnomalyCsv(anomalyTrain);
 
-				while(!str.equals("done")) {
-					str = dio.readText();
-					if(!str.equals(""))
-						anomalyTrain.write(str + "\n");
-				}
 				anomalyTrain.close();
 			}
 			catch (IOException e){
@@ -89,16 +76,11 @@ public class Commands {
 
 			dio.write("Upload complete.\n");
 
-			//TODO:  make a function
-
 			dio.write("Please upload your local test CSV file.\n");
 			try{
 				FileWriter anomalyTest = new FileWriter("anomalyTest.csv");;
-				while(!str.equals("done")) {
-					str = dio.readText();
-					if(!str.equals(""))
-						anomalyTest.write(str + "\n");
-				}
+				generateAnomalyCsv(anomalyTest);
+
 				anomalyTest.close();
 			}
 			catch (IOException e){
@@ -107,6 +89,23 @@ public class Commands {
 
 			dio.write("Upload complete.\n");
 
+			TSanomalyTrain = new TimeSeries("anomalyTrain.csv");
+			TSanomalyTest = new TimeSeries("anomalyTest.csv");
+
+		}
+	}
+
+	public void generateAnomalyCsv (FileWriter f){
+		String str = "";
+		while(!str.equals("done")) {
+			str = dio.readText();
+			if(!str.equals("")) {
+				try {
+					f.write(str + "\n");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -120,7 +119,16 @@ public class Commands {
 
 		@Override
 		public void execute() {
-			dio.write(description);
+			float newThreshold;
+			dio.write("The current correlation threshold is " + TSanomalyTest.threshold + "\n");
+			dio.write("Type a new threshold\n");
+			newThreshold = dio.readVal();
+			while(newThreshold <0 || newThreshold>1 ){
+				dio.write("please choose a value between 0 and 1.\nType a new threshold\n");
+				newThreshold = dio.readVal();
+			}
+			TSanomalyTest.threshold = newThreshold;
+
 		}
 	}
 

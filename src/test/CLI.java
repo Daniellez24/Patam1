@@ -28,20 +28,19 @@ public class CLI {
 	}
 	
 	public void start() {
-		boolean temp = true;
-		while(temp) { // keep it like this? how exit is done?
+		int counter = 1;
+		while(counter <=2) { // keep it like this? how exit is done?
 			// Print menu
 			dio.write("Welcome to the Anomaly Detection Server.\nPlease choose an option:\n");
 			for (int i=1; i<= commands.size(); i++) {
 				dio.write(commands.get(i).description + "\n");
 			}
 			// asking for the client's number choice and execute
-			commands.get((int)dio.readVal()).execute();
+			int choice = (int)dio.readVal();
+			commands.get(choice).execute();
 
-			temp=false;
+			counter ++; // TODO: delete this when finished the exe
 		}
-
-
 
 	}
 }
