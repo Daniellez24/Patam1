@@ -29,7 +29,7 @@ public class CLI {
 	
 	public void start() {
 		int counter = 1;
-		while(counter <=2) { // keep it like this? how exit is done?
+		while(counter <=3) { // keep it like this? how exit is done?
 			// Print menu
 			dio.write("Welcome to the Anomaly Detection Server.\nPlease choose an option:\n");
 			for (int i=1; i<= commands.size(); i++) {

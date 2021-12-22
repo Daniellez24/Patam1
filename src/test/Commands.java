@@ -97,8 +97,8 @@ public class Commands {
 
 	public void generateAnomalyCsv (FileWriter f){
 		String str = "";
+		str = dio.readText();
 		while(!str.equals("done")) {
-			str = dio.readText();
 			if(!str.equals("")) {
 				try {
 					f.write(str + "\n");
@@ -106,6 +106,7 @@ public class Commands {
 					e.printStackTrace();
 				}
 			}
+			str = dio.readText();
 		}
 	}
 
@@ -127,7 +128,9 @@ public class Commands {
 				dio.write("please choose a value between 0 and 1.\nType a new threshold\n");
 				newThreshold = dio.readVal();
 			}
+			TSanomalyTrain.threshold = newThreshold;
 			TSanomalyTest.threshold = newThreshold;
+
 
 		}
 	}
@@ -142,7 +145,11 @@ public class Commands {
 
 		@Override
 		public void execute() {
-			dio.write(description);
+			SimpleAnomalyDetector simpleAnomalyDetector = new SimpleAnomalyDetector();
+			simpleAnomalyDetector.learnNormal(TSanomalyTrain);
+			simpleAnomalyDetector.detect(TSanomalyTest);
+			dio.write("anomaly detection complete.\n");
+
 		}
 	}
 
