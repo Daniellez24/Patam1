@@ -38,13 +38,13 @@ public class MainTrain {
 
 
 	public static void main(String[] args) {
-		FileIO fio=new FileIO("input.txt", "output.txt");
+		FileIO fio=new FileIO("src/test/input.txt", "src/test/output.txt");
 //		FileIO fio=new FileIO("System.in.read()", "System.out.print()");
 
 		CLI cli=new CLI(fio);
 		cli.start();
 		fio.close();
-		check("output.txt","expectedOutput.txt");
+		check("src/test/output.txt", "src/test/expectedOutput.txt");
 		System.out.println("done");
 	}
 

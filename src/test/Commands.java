@@ -61,22 +61,61 @@ public class Commands {
 //		}
 //	}
 
+
+
 	public class UploadCSVfile extends Command{
 
 		public UploadCSVfile() {
-			super("upload a time series csv file");
+			super("1. upload a time series csv file");
 		}
 
 		@Override
 		public void execute() {
-			dio.write(description);
+			dio.write("Please upload your local train CSV file.\n");
+			String str = "";
+			try{
+				FileWriter anomalyTrain = new FileWriter("anomalyTrain.csv");;
+
+				while(!str.equals("done")) {
+					str = dio.readText();
+					if(!str.equals(""))
+						anomalyTrain.write(str + "\n");
+				}
+				anomalyTrain.close();
+			}
+			catch (IOException e){
+				e.printStackTrace();
+			}
+
+			dio.write("Upload complete.\n");
+
+			//TODO:  make a function
+
+			dio.write("Please upload your local test CSV file.\n");
+			try{
+				FileWriter anomalyTest = new FileWriter("anomalyTest.csv");;
+				while(!str.equals("done")) {
+					str = dio.readText();
+					if(!str.equals(""))
+						anomalyTest.write(str + "\n");
+				}
+				anomalyTest.close();
+			}
+			catch (IOException e){
+				e.printStackTrace();
+			}
+
+			dio.write("Upload complete.\n");
+
 		}
 	}
+
+
 
 	public class AlgorithmSettings extends Command{
 
 		public AlgorithmSettings() {
-			super("algorithm settings");
+			super("2. algorithm settings");
 		}
 
 		@Override
@@ -84,11 +123,13 @@ public class Commands {
 			dio.write(description);
 		}
 	}
+
+
 
 	public class DetectAnomalies extends Command{
 
 		public DetectAnomalies() {
-			super("detect anomalies");
+			super("3. detect anomalies");
 		}
 
 		@Override
@@ -96,11 +137,13 @@ public class Commands {
 			dio.write(description);
 		}
 	}
+
+
 
 	public class DisplayResults extends Command{
 
 		public DisplayResults() {
-			super("display results");
+			super("4. display results");
 		}
 
 		@Override
@@ -108,11 +151,13 @@ public class Commands {
 			dio.write(description);
 		}
 	}
+
+
 
 	public class UploadAnomaliesAnalyzeResults extends Command{
 
 		public UploadAnomaliesAnalyzeResults() {
-			super("upload anomalies and analyze results");
+			super("5. upload anomalies and analyze results");
 		}
 
 		@Override
@@ -121,10 +166,12 @@ public class Commands {
 		}
 	}
 
+
+
 	public class Exit extends Command{
 
 		public Exit() {
-			super("exit");
+			super("6. exit");
 		}
 
 		@Override

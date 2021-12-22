@@ -24,19 +24,21 @@ public class CLI {
 		commands.put(5,c.new UploadAnomaliesAnalyzeResults());
 		commands.put(6,c.new Exit());
 
-		// implement
+
 	}
 	
 	public void start() {
-		while(true) { // keep it like this? how exit is done?
-			dio.write("Welcome to the Anomaly Detection Server.\nPlease choose an option:");
-			int i = 1;
-			for (Command c : commands) {
-				dio.write(i + ". ");
-				c.execute();
-				//			System.out.println(i + ". " + c.execute());
-				i++;
+		boolean temp = true;
+		while(temp) { // keep it like this? how exit is done?
+			// Print menu
+			dio.write("Welcome to the Anomaly Detection Server.\nPlease choose an option:\n");
+			for (int i=1; i<= commands.size(); i++) {
+				dio.write(commands.get(i).description + "\n");
 			}
+			// asking for the client's number choice and execute
+			commands.get((int)dio.readVal()).execute();
+
+			temp=false;
 		}
 
 
