@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Commands {
 
 	public TimeSeries TSanomalyTrain;
 	public TimeSeries TSanomalyTest;
+	List<AnomalyReport> anomalyReport = new LinkedList<>();
 
 	// Default IO interface
 	public interface DefaultIO{
@@ -65,7 +68,7 @@ public class Commands {
 		public void execute() {
 			dio.write("Please upload your local train CSV file.\n");
 			try{
-				FileWriter anomalyTrain = new FileWriter("anomalyTrain.csv");;
+				FileWriter anomalyTrain = new FileWriter("anomalyTrain.csv");
 				generateAnomalyCsv(anomalyTrain);
 
 				anomalyTrain.close();
@@ -147,7 +150,7 @@ public class Commands {
 		public void execute() {
 			SimpleAnomalyDetector simpleAnomalyDetector = new SimpleAnomalyDetector();
 			simpleAnomalyDetector.learnNormal(TSanomalyTrain);
-			simpleAnomalyDetector.detect(TSanomalyTest);
+			anomalyReport = simpleAnomalyDetector.detect(TSanomalyTest);
 			dio.write("anomaly detection complete.\n");
 
 		}
@@ -163,7 +166,11 @@ public class Commands {
 
 		@Override
 		public void execute() {
-			dio.write(description);
+			for (AnomalyReport a: anomalyReport) {
+				dio.write(a.timeStep + "\t" + a.description + "\n" );
+			}
+			dio.write("Done.\n");
+
 		}
 	}
 
@@ -177,7 +184,33 @@ public class Commands {
 
 		@Override
 		public void execute() {
-			dio.write(description);
+			dio.write("Please upload your local anomalies file.\n");
+			// save the client's anomaly file
+			try{
+				FileWriter anomalyFile = new FileWriter("anomalyFile.csv");
+				generateAnomalyCsv(anomalyFile);
+				anomalyFile.close();
+			}
+			catch (IOException e){
+				e.printStackTrace();
+			}
+
+			dio.write("Upload complete.\n");
+
+			// save the anomaly detection with start and end timestep in a map
+			HashMap<AnomalyReport, Long> detectorAnomalyMap = new HashMap<>();
+			AnomalyReport tempAnomalyReport = anomalyReport.get(0);
+
+			for (AnomalyReport a: anomalyReport) {
+				if(!a.description.equals(tempAnomalyReport.description)){
+					detectorAnomalyMap.put(tempAnomalyReport, a.timeStep-1);
+					tempAnomalyReport = a;
+				}
+			}
+
+			//compare
+			//TODO: continue compare the anomaly file from client, and our detector anomaly map
+
 		}
 	}
 
