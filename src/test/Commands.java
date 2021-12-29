@@ -13,6 +13,7 @@ public class Commands {
 
 	public TimeSeries TSanomalyTrain;
 	public TimeSeries TSanomalyTest;
+	public TimeSeries TSanomalyFile;
 	List<AnomalyReport> anomalyReport = new LinkedList<>();
 
 	// Default IO interface
@@ -186,8 +187,10 @@ public class Commands {
 		public void execute() {
 			dio.write("Please upload your local anomalies file.\n");
 			// save the client's anomaly file
+			FileWriter anomalyFile;
 			try{
-				FileWriter anomalyFile = new FileWriter("anomalyFile.csv");
+				anomalyFile = new FileWriter("anomalyFile.csv");
+				anomalyFile.write("startAnomaly,endAnomaly\n"); // to fill the criteria titles of thr datamatrix
 				generateAnomalyCsv(anomalyFile);
 				anomalyFile.close();
 			}
@@ -208,8 +211,20 @@ public class Commands {
 				}
 			}
 
-			//compare
+			TSanomalyFile = new TimeSeries("anomalyFile.csv");
+			try {
+				TSanomalyFile.readCsvFile();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			float[][] anomalyFileMatrix = TSanomalyFile.getDataMatrix();
+			
+			//find true positive rate
+
+
+			//compare between galay and received kovetz
 			//TODO: continue compare the anomaly file from client, and our detector anomaly map
+
 
 		}
 	}
