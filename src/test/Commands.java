@@ -2,12 +2,7 @@ package test;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Commands {
 
@@ -201,7 +196,7 @@ public class Commands {
 			dio.write("Upload complete.\n");
 
 			// save the anomaly detection with start and end timestep in a map
-			HashMap<AnomalyReport, Long> detectorAnomalyMap = new HashMap<>();
+			LinkedHashMap<AnomalyReport, Long> detectorAnomalyMap = new LinkedHashMap<>();
 			AnomalyReport tempAnomalyReport = anomalyReport.get(0);
 
 			for (AnomalyReport a: anomalyReport) {
@@ -218,12 +213,45 @@ public class Commands {
 				e.printStackTrace();
 			}
 			float[][] anomalyFileMatrix = TSanomalyFile.getDataMatrix();
-			
-			//find true positive rate
+//			LinkedHashMap<Long, Long> anomalyFileMap = new LinkedHashMap<>();
+//			for (int i = 0; i < TSanomalyFile.getNumOFlinesParameter(); i++) {
+//				anomalyFileMap.put((long)anomalyFileMatrix[i][0], (long)anomalyFileMatrix[i][1]);
+//			}
+//			int J =0;
 
+			// save the time steps given in the file in a list
+			LinkedList<long[]> anomalyFileList = new LinkedList<>();
+			for (int i = 0; i < TSanomalyFile.getNumOFlinesParameter() ; i++) {
+				long[] currAnomalyTimeSteps = new long[2];
+				currAnomalyTimeSteps[0]= (long)anomalyFileMatrix[i][0];
+				currAnomalyTimeSteps[1]= (long)anomalyFileMatrix[i][1];
 
-			//compare between galay and received kovetz
-			//TODO: continue compare the anomaly file from client, and our detector anomaly map
+				anomalyFileList.add(currAnomalyTimeSteps);
+			}
+
+			long truePositive = 0;
+			long falsePositive = 0;
+			long N = anomalyFileList.size(); // number of lines in the file
+
+			for (long[] arr: anomalyFileList ) {
+				long timestep = arr[1] - arr[0];
+				for (Map.Entry entry : detectorAnomalyMap.entrySet()) {
+					AnomalyReport entryKey = (AnomalyReport)entry.getKey();
+					long entrytimestep = entryKey.timeStep;
+
+					if(entrytimestep > arr[0] && entrytimestep < arr[1]){
+						truePositive = truePositive + ((long)entry.getValue() - entrytimestep);
+					}
+					else{
+						falsePositive = falsePositive + ((long)entry.getValue() - entrytimestep);
+					}
+
+				}
+			}
+
+			dio.write("True Positive Rate: " + (truePositive/N) + "\nFalse Positive Rate: " + (falsePositive/N) + "\n");
+
+			//TODO: fix comaration between list and map
 
 
 		}
