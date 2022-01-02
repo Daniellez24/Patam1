@@ -2,6 +2,8 @@ package test;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class Commands {
@@ -198,11 +200,15 @@ public class Commands {
 			// save the anomaly detection with start and end timestep in a map
 			LinkedHashMap<AnomalyReport, Long> detectorAnomalyMap = new LinkedHashMap<>();
 			AnomalyReport tempAnomalyReport = anomalyReport.get(0);
-
+			int counter = 0;
 			for (AnomalyReport a: anomalyReport) {
 				if(!a.description.equals(tempAnomalyReport.description)){
-					detectorAnomalyMap.put(tempAnomalyReport, a.timeStep-1);
+					detectorAnomalyMap.put(tempAnomalyReport, anomalyReport.get(counter-1).timeStep);
 					tempAnomalyReport = a;
+				}
+				counter++;
+				if(counter== anomalyReport.size()){ // add the last anomaly before finishing the anomalyReport list
+					detectorAnomalyMap.put(tempAnomalyReport, anomalyReport.get(counter-1).timeStep);
 				}
 			}
 
@@ -231,27 +237,33 @@ public class Commands {
 
 			long truePositive = 0;
 			long falsePositive = 0;
-			long N = anomalyFileList.size(); // number of lines in the file
+			float P = anomalyFileList.size(); // number of lines in the file
+			float N = TSanomalyTest.getNumOFlinesParameter();
 
 			for (long[] arr: anomalyFileList ) {
-				long timestep = arr[1] - arr[0];
+				long timestep = arr[1] - arr[0] + 1; //include the last timeStep
+				N = N - timestep;
 				for (Map.Entry entry : detectorAnomalyMap.entrySet()) {
 					AnomalyReport entryKey = (AnomalyReport)entry.getKey();
-					long entrytimestep = entryKey.timeStep;
+					long entrytimestep = entryKey.timeStep; // start time step
 
 					if(entrytimestep > arr[0] && entrytimestep < arr[1]){
-						truePositive = truePositive + ((long)entry.getValue() - entrytimestep);
+						truePositive++;
 					}
 					else{
-						falsePositive = falsePositive + ((long)entry.getValue() - entrytimestep);
+						falsePositive += (long)entry.getValue() - entrytimestep +1;
 					}
 
 				}
 			}
 
-			dio.write("True Positive Rate: " + (truePositive/N) + "\nFalse Positive Rate: " + (falsePositive/N) + "\n");
+			DecimalFormat df = new DecimalFormat("#0.0");
+			df.setMaximumFractionDigits(3);
+			df.setRoundingMode(RoundingMode.DOWN);
+			dio.write("True Positive Rate: " + df.format((float)truePositive/P)  + "\nFalse Positive Rate: " + df.format((float)falsePositive/N) + "\n");
 
-			//TODO: fix comaration between list and map
+			//TODO: fix comaration between list and map - check if the truePositive and falsePositive sum all the anomalies right
+
 
 
 		}
