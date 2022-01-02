@@ -9,6 +9,7 @@ import test.Commands.DefaultIO;
 
 public class CLI {
 
+	static boolean shouldContinue = true;
 	HashMap<Integer, Command> commands;
 	DefaultIO dio;
 	Commands c;
@@ -28,8 +29,8 @@ public class CLI {
 	}
 	
 	public void start() {
-		int counter = 1;
-		while(counter <=9) { // keep it like this? how exit is done?
+
+		while(shouldContinue) { // keep it like this? how exit is done?
 			// Print menu
 			dio.write("Welcome to the Anomaly Detection Server.\nPlease choose an option:\n");
 			for (int i=1; i<= commands.size(); i++) {
@@ -39,7 +40,6 @@ public class CLI {
 			int choice = (int)dio.readVal();
 			commands.get(choice).execute();
 
-			counter ++; // TODO: delete this when finished the exe
 		}
 
 	}

@@ -240,7 +240,7 @@ public class Commands {
 			float P = anomalyFileList.size(); // number of lines in the file
 			float N = TSanomalyTest.getNumOFlinesParameter();
 
-			Boolean[] wasChecked = new Boolean[Math.max(detectorAnomalyMap.size(), anomalyFileList.size()) ];
+			Boolean[] wasChecked = new Boolean[detectorAnomalyMap.size()];
 			for(int i = 0; i< wasChecked.length; i++){
 				wasChecked[i]  = false;
 			}
@@ -279,9 +279,6 @@ public class Commands {
 			df.setRoundingMode(RoundingMode.DOWN);
 			dio.write("True Positive Rate: " + df.format((float)truePositive/P)  + "\nFalse Positive Rate: " + df.format((float)falsePositive/N) + "\n");
 
-			//TODO: fix comaration between list and map - check if the truePositive and falsePositive sum all the anomalies right
-
-
 
 		}
 	}
@@ -296,7 +293,7 @@ public class Commands {
 
 		@Override
 		public void execute() {
-			dio.write(description);
+			CLI.shouldContinue = false;
 		}
 	}
 	
