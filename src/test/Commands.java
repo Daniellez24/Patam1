@@ -240,21 +240,38 @@ public class Commands {
 			float P = anomalyFileList.size(); // number of lines in the file
 			float N = TSanomalyTest.getNumOFlinesParameter();
 
+			Boolean[] wasChecked = new Boolean[Math.max(detectorAnomalyMap.size(), anomalyFileList.size()) ];
+			for(int i = 0; i< wasChecked.length; i++){
+				wasChecked[i]  = false;
+			}
+
 			for (long[] arr: anomalyFileList ) {
 				long timestep = arr[1] - arr[0] + 1; //include the last timeStep
 				N = N - timestep;
+				int count = 0;
 				for (Map.Entry entry : detectorAnomalyMap.entrySet()) {
 					AnomalyReport entryKey = (AnomalyReport)entry.getKey();
 					long entrytimestep = entryKey.timeStep; // start time step
 
-					if(entrytimestep > arr[0] && entrytimestep < arr[1]){
-						truePositive++;
-					}
-					else{
-						falsePositive += (long)entry.getValue() - entrytimestep +1;
+					if(!wasChecked[count]){
+						if((entrytimestep >= arr[0] && entrytimestep <= arr[1]) ||
+								(long)entry.getValue() >= arr[0] && (long)entry.getValue() <= arr[1] ||
+								entrytimestep<= arr[0] && (long)entry.getValue() >= arr[1]){
+							truePositive++;
+							wasChecked[count] = true;
+						}
+//						else{
+//							falsePositive += (long)entry.getValue() - entrytimestep + 1;
+//						}
 					}
 
+					count++;
 				}
+
+			}
+			for (int i = 0; i < wasChecked.length; i++) {
+				if(!wasChecked[i])
+					falsePositive++;
 			}
 
 			DecimalFormat df = new DecimalFormat("#0.0");
