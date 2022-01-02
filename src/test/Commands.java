@@ -219,11 +219,7 @@ public class Commands {
 				e.printStackTrace();
 			}
 			float[][] anomalyFileMatrix = TSanomalyFile.getDataMatrix();
-//			LinkedHashMap<Long, Long> anomalyFileMap = new LinkedHashMap<>();
-//			for (int i = 0; i < TSanomalyFile.getNumOFlinesParameter(); i++) {
-//				anomalyFileMap.put((long)anomalyFileMatrix[i][0], (long)anomalyFileMatrix[i][1]);
-//			}
-//			int J =0;
+
 
 			// save the time steps given in the file in a list
 			LinkedList<long[]> anomalyFileList = new LinkedList<>();
@@ -260,9 +256,6 @@ public class Commands {
 							truePositive++;
 							wasChecked[count] = true;
 						}
-//						else{
-//							falsePositive += (long)entry.getValue() - entrytimestep + 1;
-//						}
 					}
 
 					count++;
