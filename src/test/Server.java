@@ -13,7 +13,8 @@ public class Server {
 	public interface ClientHandler{
 		void handleClient(InputStream inFromClient, OutputStream outToClient);
 		default void Bye(OutputStream socketOutputStream) throws IOException {
-			socketOutputStream.write("bye".getBytes()); }
+			socketOutputStream.write("bye".getBytes());
+		}
 	}
 
 	volatile boolean stop;
@@ -40,6 +41,7 @@ public class Server {
 				}
 			}
 			server.close();
+
 		}
 		 catch (IOException e) {
 			e.printStackTrace();

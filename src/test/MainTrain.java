@@ -1,11 +1,6 @@
 package test;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.Random;
 
@@ -37,6 +32,7 @@ public class MainTrain {
 			st.close();
 			ex.close();
 		}catch(IOException e) {
+
 			System.out.println("an exception has occured (-100)");
 		}
 	}
@@ -62,6 +58,7 @@ public class MainTrain {
 
 			Thread writer=new Thread(()-> {
 				try {
+
 					BufferedReader in=new BufferedReader(new FileReader("input.txt"));
 					String line;
 					while(!(line=in.readLine()).equals("6")) {
