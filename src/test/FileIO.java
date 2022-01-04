@@ -28,6 +28,7 @@ public class FileIO implements DefaultIO{
 	
 	@Override
 	public String readText() {
+
 		return in.nextLine();
 	}
 
@@ -43,6 +44,7 @@ public class FileIO implements DefaultIO{
 
 	@Override
 	public void write(float val) {
+
 		out.print(val);
 	}
 

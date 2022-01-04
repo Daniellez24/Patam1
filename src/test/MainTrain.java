@@ -2,7 +2,12 @@ package test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Random;
 
 public class MainTrain {
 
@@ -36,14 +41,66 @@ public class MainTrain {
 		}
 	}
 
+	public static void testClient(int port){
+		try {
+			Socket theServer=new Socket("localhost", port);
+			PrintWriter outToserver=new PrintWriter(theServer.getOutputStream());
+			BufferedReader inFromServer=new BufferedReader(new InputStreamReader(theServer.getInputStream()));
+
+			Thread reader=new Thread(()->{
+				try {
+					PrintWriter out=new PrintWriter(new FileWriter("output.txt"),true);
+					String line;
+					while(!(line=inFromServer.readLine()).equals("bye")) {
+						out.println(line);
+					}
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+
+			Thread writer=new Thread(()-> {
+				try {
+					BufferedReader in=new BufferedReader(new FileReader("input.txt"));
+					String line;
+					while(!(line=in.readLine()).equals("6")) {
+						outToserver.println(line);
+						outToserver.flush();
+					}
+					outToserver.println(line);
+					outToserver.flush();
+					in.close();
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+			});
+
+			reader.start();
+			writer.start();
+			try {
+				reader.join();
+				writer.join();
+			} catch (InterruptedException e) {}
+			outToserver.close();
+			inFromServer.close();
+			theServer.close();
+		} catch (IOException e) {
+			System.out.println("an IO exception has happend (-100)");
+		}
+	}
 
 	public static void main(String[] args) {
-		FileIO fio=new FileIO("src/test/input.txt", "src/test/output.txt");
-
-		CLI cli=new CLI(fio);
-		cli.start();
-		fio.close();
-		check("src/test/output.txt", "src/test/expectedOutput.txt");
+		Random r=new Random();
+		int port=6000+r.nextInt(1000);
+		Server server=new Server();
+		server.start(port, new AnomalyDetectionHandler());
+		testClient(port);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {}
+		server.stop();
+		check("output.txt", "expectedOutput.txt");
 		System.out.println("done");
 	}
 
